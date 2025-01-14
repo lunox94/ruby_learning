@@ -47,15 +47,3 @@ class Stack
     self.array = new_array
   end
 end
-
-stack = Stack.new
-puts stack.empty?
-stack.push(5)
-stack.push(6)
-stack.push(0)
-puts stack
-puts stack.pop
-puts stack.pop
-stack.push 25
-puts stack
-puts stack.empty?
