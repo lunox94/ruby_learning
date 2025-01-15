@@ -16,6 +16,21 @@ class LinkedList
     self.size = 0
   end
 
+  def append(value)
+    new_node = Node.new(value)
+
+    if empty?
+      self.head = new_node
+    else
+      ref = head
+      ref = ref.next_node while ref.next_node
+      ref.next_node = new_node
+    end
+
+    self.size += 1
+    return value
+  end
+
   def clear
     self.head = nil
     self.size = 0
@@ -59,28 +74,6 @@ class LinkedList
     head.nil?
   end
 
-  def insert_at_head(value)
-    new_node = Node.new(value, head)
-    self.head = new_node
-    self.size += 1
-    return value
-  end
-
-  def insert_at_tail(value)
-    new_node = Node.new(value)
-
-    if empty?
-      self.head = new_node
-    else
-      ref = head
-      ref = ref.next_node while ref.next_node
-      ref.next_node = new_node
-    end
-
-    self.size += 1
-    return value
-  end
-
   def reverse
     prev = nil
     current = head
@@ -91,6 +84,13 @@ class LinkedList
       current = next_node
     end
     self.head = prev
+  end
+
+  def shift(value)
+    new_node = Node.new(value, head)
+    self.head = new_node
+    self.size += 1
+    return value
   end
 
   def to_s
@@ -108,6 +108,6 @@ class LinkedList
   end
 
   def <<(value)
-    insert_at_tail(value)
+    append(value)
   end
 end
