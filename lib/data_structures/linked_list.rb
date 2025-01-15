@@ -16,6 +16,11 @@ class LinkedList
     self.size = 0
   end
 
+  def clear
+    self.head = nil
+    self.size = 0
+  end
+
   def each
     ref = head
     while ref
