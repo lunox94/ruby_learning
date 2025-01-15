@@ -9,35 +9,35 @@ end
 
 class LinkedList
   include Enumerable
-  attr_accessor :head, :size
+  attr_reader :size
 
   def initialize
-    self.head = nil
-    self.size = 0
+    @head = nil
+    @size = 0
   end
 
   def append(value)
     new_node = Node.new(value)
 
     if empty?
-      self.head = new_node
+      @head = new_node
     else
-      ref = head
+      ref = @head
       ref = ref.next_node while ref.next_node
       ref.next_node = new_node
     end
 
-    self.size += 1
+    @size += 1
     return value
   end
 
   def clear
-    self.head = nil
-    self.size = 0
+    @head = nil
+    @size = 0
   end
 
   def each
-    ref = head
+    ref = @head
     while ref
       yield ref.value
       ref = ref.next_node
@@ -47,13 +47,13 @@ class LinkedList
   def delete(value)
     raise "List is empty" if empty?
 
-    if head.value == value
-      self.head = head.next_node
-      self.size -= 1
+    if @head.value == value
+      @head = @head.next_node
+      @size -= 1
       return value
     end
 
-    ref = head
+    ref = @head
     prev = nil
 
     until ref.nil? || ref.value == value
@@ -66,30 +66,30 @@ class LinkedList
     end
 
     prev.next_node = ref.next_node
-    self.size -= 1
+    @size -= 1
     return value
   end
 
   def empty?
-    head.nil?
+    @head.nil?
   end
 
   def reverse
     prev = nil
-    current = head
+    current = @head
     while current
       next_node = current.next_node
       current.next_node = prev
       prev = current
       current = next_node
     end
-    self.head = prev
+    @head = prev
   end
 
   def shift(value)
-    new_node = Node.new(value, head)
-    self.head = new_node
-    self.size += 1
+    new_node = Node.new(value, @head)
+    @head = new_node
+    @size += 1
     return value
   end
 
@@ -102,7 +102,7 @@ class LinkedList
 
   def [](index)
     return nil if index < 0 || index >= size
-    ref = head
+    ref = @head
     index.times { ref = ref.next_node }
     ref.value
   end
