@@ -1,6 +1,7 @@
 require_relative 'linked_list'
 
 class HashTable
+  include Enumerable
   attr_reader :size
 
   MIN_CAPACITY = 10
@@ -52,6 +53,14 @@ class HashTable
     end
     
     nil
+  end
+
+  def each
+    @array.each do |list|
+      list.each do |node|
+        yield [node.key, node.value]
+      end
+    end
   end
 
   def to_s
