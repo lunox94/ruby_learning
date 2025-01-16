@@ -27,14 +27,14 @@ class CircularQueue
     @array[@back % @array.size] = value
   end
 
+  def peek
+    empty? ? nil : @array[@front]
+  end
+
   def to_s
     elements = []
     @size.times { |i| elements << @array[(@front + i) % @array.size] }
     "[#{elements.join(', ')}]"
-  end
-
-  def peek
-    empty? ? nil : @array[@front]
   end
 
   private
