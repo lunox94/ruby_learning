@@ -2,12 +2,14 @@ require_relative "grid"
 require_relative "player"
 require_relative "human_player"
 require_relative "cpu_player"
+require_relative "min_max_strategy"
 
 class Game
   attr_reader :grid, :current_player
 
   def initialize
-    @players = [HumanPlayer.new("Player 1", "🔵"), CpuPlayer.new("🔴")]
+    strategy = MinMaxStrategy.new(9, Grid::PLAYER_ONE)
+    @players = [HumanPlayer.new("Player 1", "🟡"), CpuPlayer.new("🔴", strategy)]
     @grid = Grid.new
   end
   
