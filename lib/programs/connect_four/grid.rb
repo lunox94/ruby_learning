@@ -1,6 +1,7 @@
 class Grid
   PLAYER_ONE = true
   PLAYER_TWO = false
+  COLUMN_FULL_ERROR = "Column is full"
 
   def initialize
     @board = Array.new(6) { Array.new(7) }
@@ -13,7 +14,7 @@ class Grid
   def move(col, player)
     raise "Invalid player" unless [PLAYER_ONE, PLAYER_TWO].include?(player)
     nil_count = @board.transpose[col].count(&:nil?)
-    raise "Column is full" if nil_count.zero?
+    raise COLUMN_FULL_ERROR if nil_count.zero?
 
     row = nil_count - 1
     @board[row][col] = player
