@@ -1,11 +1,13 @@
 require_relative "grid"
 require_relative "player"
+require_relative "human_player"
+require_relative "cpu_player"
 
 class Game
   attr_reader :grid, :current_player
 
   def initialize
-    @players = [Player.new("Player 1", "🔵"), Player.new("Player 2", "🔴", Grid::PLAYER_TWO)]
+    @players = [HumanPlayer.new("Player 1", "🔵"), CpuPlayer.new("🔴")]
     @grid = Grid.new
   end
   
