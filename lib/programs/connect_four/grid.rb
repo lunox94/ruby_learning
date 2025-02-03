@@ -3,8 +3,9 @@ class Grid
   PLAYER_TWO = false
   COLUMN_FULL_ERROR = "Column is full"
 
-  def initialize
-    @board = Array.new(6) { Array.new(7) }
+  def initialize(board = nil)
+    @board = board || Array.new(6) { Array.new(7) }
+    @zobrist_table = Array.new(6) { Array.new(7) { Array.new(2) { rand(2**64) } } }
   end
 
   def board
@@ -13,11 +14,25 @@ class Grid
 
   def move(col, player)
     raise "Invalid player" unless [PLAYER_ONE, PLAYER_TWO].include?(player)
-    nil_count = @board.transpose[col].count(&:nil?)
-    raise COLUMN_FULL_ERROR if nil_count.zero?
 
-    row = nil_count - 1
-    @board[row][col] = player
+    # Find the lowest available row in the column
+    (board.length - 1).downto(0) do |row|
+      if @board[row][col].nil?
+        @board[row][col] = player
+        return
+      end
+    end
+
+    raise COLUMN_FULL_ERROR
+  end
+
+  def undo_move(col)
+    (0..5).each do |row|
+      unless @board[row][col].nil?
+        @board[row][col] = nil
+        break
+      end
+    end
   end
 
   def full?
@@ -25,11 +40,36 @@ class Grid
   end
 
   def winner?
-    return true if winning_combination?(@board.transpose) # Check columns
-    return true if winning_combination?(@board)           # Check rows
-    return true if winning_combination?(diagonals)        # Check diagonals
+    !get_winner.nil?
+  end
 
-    false # No winner
+  def get_winner
+    winner = winning_combination?(@board.transpose)
+    return winner unless winner.nil?
+
+    winner = winning_combination?(@board)
+    return winner unless winner.nil?
+
+    winner = winning_combination?(diagonals)
+    return winner unless winner.nil?
+
+    nil
+  end
+
+  def game_over?
+    full? || winner?
+  end
+
+  def state_hash
+    hash = 0
+    @board.each_with_index do |row, i|
+      row.each_with_index do |cell, j|
+        next if cell.nil?
+        player_index = cell == PLAYER_ONE ? 0 : 1
+        hash ^= @zobrist_table[i][j][player_index]
+      end
+    end
+    hash
   end
 
   private
@@ -53,9 +93,9 @@ class Grid
   def winning_combination?(lines)
     lines.each do |line|
       line.each_cons(4) do |four|
-        return true if four.all? { |cell| cell == four.first && !cell.nil? }
+        return four.first if four.all? { |cell| cell == four.first && !cell.nil? }
       end
     end
-    false
+    nil
   end
 end
