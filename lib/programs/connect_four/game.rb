@@ -2,7 +2,7 @@ require_relative "grid"
 require_relative "player"
 
 class Game
-  attr_reader :players, :grid, :current_player
+  attr_reader :grid, :current_player
 
   def initialize
     @players = [Player.new("Player 1", "🔵"), Player.new("Player 2", "🔴", Grid::PLAYER_TWO)]
@@ -14,7 +14,7 @@ class Game
 
     until @grid.full? || @grid.winner?
       display_grid
-      column = @current_player.choose_column
+      column = @current_player.choose_column @grid.board
       @grid.move(column, @current_player.key)
       swap_players
     end
@@ -26,6 +26,10 @@ class Game
     else
       puts "It's a draw!"
     end
+  end
+
+  def players
+    @players.dup
   end
 
   private
